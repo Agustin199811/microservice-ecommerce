@@ -1,0 +1,47 @@
+name: Build and Push Docker Images
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    name: Build and Push Docker Images
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+
+      # Build and push each service defined in docker-compose.yml
+      - name: Build and push order-service
+        run: |
+          docker build ./order-service -f ./order-service/Dockerfile -t ${{ secrets.DOCKER_HUB_USERNAME }}/order-service:latest
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/order-service:latest
+
+      - name: Build and push inventory-service
+        run: |
+          docker build ./inventory-service -f ./inventory-service/Dockerfile -t ${{ secrets.DOCKER_HUB_USERNAME }}/inventory-service:latest
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/inventory-service:latest
+
+      - name: Build and push tracking-service
+        run: |
+          docker build ./tracking-service -f ./tracking-service/Dockerfile -t ${{ secrets.DOCKER_HUB_USERNAME }}/tracking-service:latest
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/tracking-service:latest
+
+      - name: Build and push api-gateway
+        run: |
+          docker build ./api-gateway -f ./api-gateway/Dockerfile -t ${{ secrets.DOCKER_HUB_USERNAME }}/api-gateway:latest
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/api-gateway:latest
+
+      - name: Build and push frontend-service
+        run: |
+          docker build ./frontend-service -f ./frontend-service/Dockerfile -t ${{ secrets.DOCKER_HUB_USERNAME }}/frontend-service:latest
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/frontend-service:latest

@@ -33,6 +33,16 @@ services:
     networks:
       - ecommerce-network
 
+  frontend-service:
+    build: ./frontend-service
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api-gateway
+    networks:
+      - ecommerce-network
+
+
 networks:
   ecommerce-network:
     driver: bridge

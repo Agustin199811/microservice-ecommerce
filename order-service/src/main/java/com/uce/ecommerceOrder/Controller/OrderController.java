@@ -16,13 +16,13 @@ import com.uce.ecommerceOrder.Model.Order;
 import com.uce.ecommerceOrder.Service.OrderService;
 
 @RestController
-@RequestMapping("/ecommerce")
+@RequestMapping("/ecommerce/orders")
 public class OrderController {
     
     @Autowired
     private OrderService orderService;
 
-    @GetMapping("/orders")
+    @GetMapping
     public ResponseEntity<List<Order>> getAllOrders(){
         return ResponseEntity.ok(orderService.getAllOrders());
     }
@@ -32,7 +32,7 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getOrdersByCustomer(customer));
     }
 
-    @PostMapping("/orders")
+    @PostMapping
     public ResponseEntity<Order> createOrder(@RequestBody Order order) {
         return ResponseEntity.status(HttpStatus.CREATED).body(orderService.saveOrder(order));
     }
