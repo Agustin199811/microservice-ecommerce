@@ -16,7 +16,7 @@ import com.uce.ecommerceOrder.Model.Order;
 import com.uce.ecommerceOrder.Service.OrderService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/ecommerce")
 public class OrderController {
     
     @Autowired

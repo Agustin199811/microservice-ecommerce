@@ -16,7 +16,7 @@ import com.uce.tracking.Model.Tracking;
 import com.uce.tracking.Service.TrackingService;
 
 @RestController
-@RequestMapping("/tracking")
+@RequestMapping("/ecommerce/tracking")
 public class TrackingController {
 
     @Autowired

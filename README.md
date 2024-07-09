@@ -37,21 +37,21 @@ This project is currently in development and is being worked on for version 1.0.
 
 The Product Order Status REST API Microservice1 exposes the following endpoints:
 
-- `GET /api/orders`: Get all orders.
-- `GET /api/orders/customer/{customer}`: find order by customer name.
-- `POST /api/orders`: Create a new orders.
+- `GET /ecommerce/orders`: Get all orders.
+- `GET /ecommerce/orders/customer/{customer}`: find order by customer name.
+- `POST /ecommerce/orders`: Create a new orders.
 
 The Product Traking REST API Microservice2 exposes the following endpoints:
 
-- `GET /tracking`: Get all tracking.
-- `GET /tracking/{trackingId}`: find tracking by id.
-- `POST /tracking`: Create a new tracking.
+- `GET /ecommerce/tracking`: Get all tracking.
+- `GET /ecommerce/tracking/{trackingId}`: find tracking by id.
+- `POST /ecommerce/tracking`: Create a new tracking.
 
 The Product Iventory REST Microservice3 API exposes the following endpoints:
 
-- `GET /inventory`: Get all inventory.
-- `GET /inventory/{productId}`: find inventory by product id.
-- `POST /inventory`: Create a new inventory.
+- `GET /ecommerce/inventory`: Get all inventory.
+- `GET /ecommerce/inventory/{productId}`: find inventory by product id.
+- `POST /ecommerce/inventory`: Create a new inventory.
 
 You can use tools such as Postman or cURL to send HTTP requests to these endpoints.
 

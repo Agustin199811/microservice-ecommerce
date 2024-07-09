@@ -16,7 +16,7 @@ import com.uce.inventory.Model.Inventory;
 import com.uce.inventory.Services.InventoryServices;
 
 @RestController
-@RequestMapping("/inventory")
+@RequestMapping("/ecommerce/inventory")
 public class InventoryController {
     @Autowired
     private InventoryServices inventoryService;
