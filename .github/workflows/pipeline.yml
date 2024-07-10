@@ -82,14 +82,13 @@ jobs:
           
             sudo docker network create ecommerce-network || true
 
-            # Extraer las nuevas imágenes desde Docker Hub
             sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/order-service:latest
             sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/inventory-service:latest
             sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/tracking-service:latest
             sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/api-gateway:latest
             sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/frontend-service:latest
 
-            # Iniciar los contenedores con las nuevas imágenes en la red personalizada
+           
             sudo docker run -d --name order-service --network ecommerce-network -p 8081:8080 ${{ secrets.DOCKER_HUB_USERNAME }}/order-service:latest
             sudo docker run -d --name inventory-service --network ecommerce-network -p 8082:8080 ${{ secrets.DOCKER_HUB_USERNAME }}/inventory-service:latest
             sudo docker run -d --name tracking-service --network ecommerce-network -p 8083:8080 ${{ secrets.DOCKER_HUB_USERNAME }}/tracking-service:latest
