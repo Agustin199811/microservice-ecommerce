@@ -45,3 +45,57 @@ jobs:
         run: |
           docker build ./frontend-service -f ./frontend-service/Dockerfile -t ${{ secrets.DOCKER_HUB_USERNAME }}/frontend-service:latest
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/frontend-service:latest
+  deploy:
+    name: Deploy to AWS EC2
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    if: ${{ needs.build-and-push.result == 'success' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: AWS SSM Send-Command
+        uses: peterkimzz/aws-ssm-send-command@v1.1.1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          instance-ids: ${{ secrets.AWS_INSTANCE_ID }}
+          working-directory: /home/ubuntu
+          command: |
+            # Verificar si Docker está instalado y, si no, instalarlo
+            if ! [ -x "$(command -v docker)" ]; then
+              sudo apt-get update
+              sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+              curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+              sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+              sudo apt-get update
+              sudo apt-get install -y docker-ce
+              sudo usermod -aG docker $USER
+            fi
+
+            # Detener y eliminar cualquier contenedor en ejecución
+            sudo docker stop $(sudo docker ps -q) || true
+            sudo docker rm $(sudo docker ps -aq) || true
+
+            # Crear una red personalizada
+            sudo docker network create ecommerce-network || true
+
+            # Extraer las nuevas imágenes desde Docker Hub
+            sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/order-service:latest
+            sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/inventory-service:latest
+            sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/tracking-service:latest
+            sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/api-gateway:latest
+            sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/frontend-service:latest
+
+            # Iniciar los contenedores con las nuevas imágenes en la red personalizada
+            sudo docker run -d --name order-service --network ecommerce-network -p 8081:8080 ${{ secrets.DOCKER_HUB_USERNAME }}/order-service:latest
+            sudo docker run -d --name inventory-service --network ecommerce-network -p 8082:8080 ${{ secrets.DOCKER_HUB_USERNAME }}/inventory-service:latest
+            sudo docker run -d --name tracking-service --network ecommerce-network -p 8083:8080 ${{ secrets.DOCKER_HUB_USERNAME }}/tracking-service:latest
+            sudo docker run -d --name api-gateway --network ecommerce-network -p 8080:8080 ${{ secrets.DOCKER_HUB_USERNAME }}/api-gateway:latest
+            sudo docker run -d --name frontend-service --network ecommerce-network -p 3000:3000 ${{ secrets.DOCKER_HUB_USERNAME }}/frontend-service:latest
+
+            # Limpiar imágenes antiguas no utilizadas
+            sudo docker image prune -af
+          comment: Pulls the latest images from Docker Hub and runs them on the instance in a custom network.
