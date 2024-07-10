@@ -80,7 +80,7 @@ jobs:
             sudo docker rm $(sudo docker ps -aq) || true
 
           
-            sudo docker network create ecommerce-network || true
+            
 
             sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/order-service:latest
             sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/inventory-service:latest
@@ -89,11 +89,11 @@ jobs:
             sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/frontend-service:latest
 
            
-            sudo docker run -d --name order-service --network ecommerce-network -p 8081:8080 ${{ secrets.DOCKER_HUB_USERNAME }}/order-service:latest
-            sudo docker run -d --name inventory-service --network ecommerce-network -p 8082:8080 ${{ secrets.DOCKER_HUB_USERNAME }}/inventory-service:latest
-            sudo docker run -d --name tracking-service --network ecommerce-network -p 8083:8080 ${{ secrets.DOCKER_HUB_USERNAME }}/tracking-service:latest
-            sudo docker run -d --name api-gateway --network ecommerce-network -p 8080:8080 ${{ secrets.DOCKER_HUB_USERNAME }}/api-gateway:latest
-            sudo docker run -d --name frontend-service --network ecommerce-network -p 3000:3000 ${{ secrets.DOCKER_HUB_USERNAME }}/frontend-service:latest
+            sudo docker run -d --name order-service  -p 8081:8080 ${{ secrets.DOCKER_HUB_USERNAME }}/order-service:latest
+            sudo docker run -d --name inventory-service  -p 8082:8080 ${{ secrets.DOCKER_HUB_USERNAME }}/inventory-service:latest
+            sudo docker run -d --name tracking-service  -p 8083:8080 ${{ secrets.DOCKER_HUB_USERNAME }}/tracking-service:latest
+            sudo docker run -d --name api-gateway  -p 8080:8080 ${{ secrets.DOCKER_HUB_USERNAME }}/api-gateway:latest
+            sudo docker run -d --name frontend-service  -p 3000:3000 ${{ secrets.DOCKER_HUB_USERNAME }}/frontend-service:latest
 
            
             sudo docker image prune -af
