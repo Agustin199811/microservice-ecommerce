@@ -95,6 +95,6 @@ jobs:
             sudo docker run -d --name api-gateway --network ecommerce-network -p 8080:8080 ${{ secrets.DOCKER_HUB_USERNAME }}/api-gateway:latest
             sudo docker run -d --name frontend-service --network ecommerce-network -p 3000:3000 ${{ secrets.DOCKER_HUB_USERNAME }}/frontend-service:latest
 
-            # Limpiar imágenes antiguas no utilizadas
+           
             sudo docker image prune -af
           comment: Pulls the latest images from Docker Hub and runs them on the instance in a custom network.
