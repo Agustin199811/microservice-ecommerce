@@ -64,7 +64,7 @@ jobs:
           instance-ids: ${{ secrets.AWS_INSTANCE_ID }}
           working-directory: /home/ubuntu
           command: |
-            # Verificar si Docker está instalado y, si no, instalarlo
+          
             if ! [ -x "$(command -v docker)" ]; then
               sudo apt-get update
               sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
