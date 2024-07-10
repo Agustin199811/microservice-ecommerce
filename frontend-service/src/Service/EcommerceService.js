@@ -1,5 +1,5 @@
 import axios from 'axios'
-const ecommerce_service="http://localhost:8080/ecommerce";
+const ecommerce_service="http://3.141.8.210:8080/ecommerce";
 
 class EcommerceService {
     getAllOrders(){
